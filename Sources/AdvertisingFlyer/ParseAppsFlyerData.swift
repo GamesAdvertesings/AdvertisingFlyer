@@ -8,7 +8,6 @@ import Foundation
 
 final class ParseAppsFlyerData {
     
-    var urlParameters: ((String?) -> Void)?
     var installCompletion: ((Install?) -> Void)?
     
     func parseCampaign(_ conversionInfo: [AnyHashable : Any]) {
@@ -29,17 +28,16 @@ final class ParseAppsFlyerData {
         return status
     }
     
-    private func createParameters(conversionInfo: [AnyHashable : Any]) -> String {
-        let resultArray = conversionInfo.compactMap({ key, value in
+    private func createParameters(conversionInfo: [AnyHashable : Any]) -> [String: String] {
+        var parameters: [String: String] = [:]
+        conversionInfo.forEach({ key, value in
             if let key = key as? String, let value = value as? String, let keyCreate = Key(rawValue: key) {
                 let keyParameter = getAnalog(key: keyCreate)
                 let valueParameter = value
-                return keyParameter + "+" + valueParameter
-            } else {
-                return nil
+                parameters.updateValue(valueParameter, forKey: keyParameter)
             }
         })
-        let parameters = resultArray.joined(separator: "&")
+       
         return parameters
     }
     
@@ -63,7 +61,7 @@ final class ParseAppsFlyerData {
 
 public enum Install {
     case organic
-    case nonOrganic(String)
+    case nonOrganic([String: String]?)
 }
 
 public enum AfStatus: String {

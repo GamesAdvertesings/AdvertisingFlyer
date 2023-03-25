@@ -8,7 +8,6 @@ public final class GDAppsFlyer {
     private let appsFlyerDeepLinkDelegate = AppsFlyerDeepLinkDelegate()
     private let parseAppsFlyerData = ParseAppsFlyerData()
     
-    public var urlParameters: ((String?) -> Void)?
     public var installCompletion = PassthroughSubject<Install, Never>()
     public var completionDeepLinkResult: ((DeepLinkResult) -> Void)?
     
@@ -52,16 +51,16 @@ public final class GDAppsFlyer {
                     case .denied:
                         print("AuthorizationSatus is denied")
                         
-                        self.installCompletion.send(.nonOrganic(""))
+                        self.installCompletion.send(.nonOrganic(nil))
                         self.appsFlyerDelegate.installCompletion = nil
                     case .notDetermined:
                         print("AuthorizationSatus is notDetermined")
                         
-                        self.installCompletion.send(.nonOrganic(""))
+                        self.installCompletion.send(.nonOrganic(nil))
                         self.appsFlyerDelegate.installCompletion = nil
                     case .restricted:
                         print("AuthorizationSatus is restricted")
-                        self.installCompletion.send(.nonOrganic(""))
+                        self.installCompletion.send(.nonOrganic(nil))
                         self.appsFlyerDelegate.installCompletion = nil
                     case .authorized:
                         print("AuthorizationSatus is authorized")
@@ -79,7 +78,6 @@ public final class GDAppsFlyer {
             guard let self = self else { return }
             self.installCompletion.send(install)
         }
-        appsFlyerDelegate.urlParameters = urlParameters
     }
 
     public init(){}
